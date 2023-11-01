@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en-in">
+    <head>
+        <title>Analog Clock</title>
+        <link rel="stylesheet" href="../node_modules/bootstrap-icons/font/bootstrap-icons.css">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="keywords" content="some keywords about your page">
+        <meta name="description" content="some descritption about your page">
+        <!-- <meta http-equiv="refresh" content="4"> -->
+        <style>
+            *{
+                margin:0;
+                padding:0;
+                box-sizing: border-box;
+                font-family:sans-serif;
+            }
+            body{
+                background-color: rgb(160, 155, 155);
+                color:white;
+                min-height:100vh;
+                display:flex;
+                justify-content: center;
+                align-items:center;
+            }
+            .container{
+                position:relative;
+            }
+            .clock{
+                /* position:absolute; */
+                /* border:1px solid rgba(128,128,128,0.9); */
+                border-top:10px solid red;
+                border-bottom:10px solid tomato;
+                border-left:10px solid green;
+                border-right:10px solid blue;
+                width:400px;
+                height:400px;
+                border-radius:50%;
+                box-shadow: 0 0 20px black;
+                background-color:rgba(128,128,128,0.5);
+                display:flex;
+                justify-content: center;
+                align-items: center;
+                /* text-align: center; */
+            }
+            .clock::before{
+                content:"";
+                position:absolute;
+                width:10px;
+                height:10px;
+                background-color: white;
+                border:1px solid white;
+                border-radius: 50%;
+            }
+            .clock span{
+                position:absolute;
+                transform:rotate(calc(30deg * var(--i)));
+                inset:12px;
+                text-align: center;
+            }
+            .clock span b{
+                transform:rotate(calc(-30deg * var(--i)));
+                display:inline-block;
+                font-size:20px;
+            }
+            .hand{
+                position:absolute;
+                display:flex;
+                justify-content: center;
+                align-items:flex-end;
+            }
+            .hand i{
+                position:absolute;
+                height:18vh;
+                width:2px;
+                background-color:var(--color);
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="clock">
+                <div style="--color:red;" class="hand" id="hour"><i></i></div>
+                <div style="--color:skyblue;" class="hand" id="minute"><i></i></div>
+                <div style="--color:white;" class="hand" id="second"><i></i></div>
+                <span style="--i:1;"><b>1</b></span>
+                <span style="--i:2;"><b>2</b></span>
+                <span style="--i:3;"><b>3</b></span>
+                <span style="--i:4;"><b>4</b></span>
+                <span style="--i:5;"><b>5</b></span>
+                <span style="--i:6;"><b>6</b></span>
+                <span style="--i:7;"><b>7</b></span>
+                <span style="--i:8;"><b>8</b></span>
+                <span style="--i:9;"><b>9</b></span>
+                <span style="--i:10;"><b>10</b></span>
+                <span style="--i:11;"><b>11</b></span>
+                <span style="--i:12;"><b>12</b></span>
+            </div>
+        </div>
+        <script>
+            let hr= document.getElementById("hour");
+            let mn= document.getElementById("minute");
+            let sc= document.getElementById("second");
+             
+            function clockTime(){
+                let date= new Date();
+
+                let hh=date.getHours();
+                let mm=date.getMinutes();
+                let ss=date.getSeconds();
+
+                let hRotation=30*hh + mm/2;
+                let mRotation=6*mm;
+                let sRotation=6*ss;
+
+                hr.style.transform=`rotate(${hRotation}deg)`;
+                mn.style.transform =`rotate(${mRotation}deg)`;
+                sc.style.transform =`rotate(${sRotation}deg)`;
+            }
+            setInterval(clockTime, 1000);
+        </script>
+    </body>
+</html>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en-in">
+
+<head>
+    <title>Document</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="some keywords about page">
+    <meta name="description" content="some description about page">
+    <!-- <meta http-equiv="refresh" content="4"> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        function loadCategory() {
+            $.ajax({
+                method: "get",
+                url: "https://fakestoreapi.com/products/categories",
+                success: ((res) => {//res means response..(ajax response)...
+                    res.unshift("all")
+                    res.map((category) => {
+                        $(`<option>${category}</option>`.toUpperCase()).appendTo("#lstCategory");
+                    })
+                }),
+                // error:(errorObj)=>{
+                //     console.log(errorObj);
+                // }
+            })
+        }
+
+        function changeCategory() {
+            $("#lstCategory").change(() => {
+                loadCartProduct($("#lstCategory").val());
+                // console.log($("#lstCategory").val());
+            })
+        }
+
+        function loadCartProduct(categoryN) {
+            $("#cartContainer").html("");
+
+            //This is if conditional Way to fetch api data from condition wise URL....
+
+            // var productObj={
+            //     method:"get",
+            //     success:((products) => {
+            //     products.map((product) => {
+            //         $(`<div class='card w-25 m-1'>
+            //                 <img class='card-img-top' src='${product.image}' width='150' height='200'>
+            //             <div class='card-header' style='height:65px; overflow:auto;'>
+            //                 <h6 class='card-title'>${product.title}</h6>
+            //             </div>    
+            //             <div class='card-body'>
+            //                 <p class='card-subtitle' style='height:80px; overflow:auto;'>${product.description}</p>
+            //             </div>
+            //             <div class='card-footer'><button value='${product.id}' id='btnAddToCart' class='form-control btn btn-success'>Add to Cart</button></div>
+            //             </div>`).appendTo("#cartContainer");
+            //     })
+            // })
+            // };
+            // if(categoryN=="ALL"){
+            //     productObj.url="https://fakestoreapi.com/products";
+            // }
+            // else if(categoryN){
+            //     productObj.url=`https://fakestoreapi.com/products/category/${categoryN}`.toLowerCase();
+            // }
+            // else{
+            //    productObj.url="https://fakestoreapi.com/products";
+            // }
+            // $.ajax(productObj);
+
+            //This is Ternary Operator way to fetch api data from condition URL....
+
+            $.ajax({
+                method: "get",
+                url: (categoryN == "ALL") ? "https://fakestoreapi.com/products" : (categoryN) ? `https://fakestoreapi.com/products/category/${categoryN}`.toLowerCase() : "https://fakestoreapi.com/products",
+                success: ((products) => {
+                    products.map((product) => {
+                        $(`<div class='card w-25 m-1'>
+                            <img class='card-img-top' src='${product.image}' width='150' height='200'>
+                        <div class='card-header' style='height:65px; overflow:auto;'>
+                            <h6 class='card-title'>${product.title}</h6>
+                        </div>    
+                        <div class='card-body'>
+                            <p class='card-subtitle' style='height:80px; overflow:auto;'>${product.description}</p>
+                        </div>
+                        <div class='card-footer'><button value='${product.id}' id='btnAddToCart' class='form-control btn btn-success'>Add to Cart</button></div>
+                        </div>`).appendTo("#cartContainer");
+                    })
+                })
+            })
+        }
+
+        let cartCount = [];
+        let qty = [];
+        let subTotal=0;
+        function btnAddToCart() {
+            $(document).on("click", "#btnAddToCart", (e) => {
+                cartCount.push(`${e.target.value}`);
+                $("#cartCount").html(`${cartCount.length}`);
+                qty = cartCount.filter((val) => {
+                    return val == e.target.value;
+                });
+                console.log(qty);
+                    $.ajax({
+                        method: "get",
+                        url: `https://fakestoreapi.com/products/${e.target.value}`,
+                        success: ((cartDetail) => {
+                            if(e.target.value==qty[1]){
+                                $(`#qty${cartDetail.id}`).html(`${qty.length}`);
+                                $(`#total${cartDetail.id}`).html(`${cartDetail.price*qty.length}/-`);
+                                subTotal=subTotal+cartDetail.price;
+                                $("#subTotal").html(`${subTotal.toFixed(2).bold()}/-`);
+                            }
+                            else{
+                                $(`<tr>
+                                    <td>
+                                        <img src='${cartDetail.image}' width="50" height="60">
+                                     </td>
+                                    <td>${cartDetail.title}</td>
+                                    <td>${cartDetail.price}</td>
+                                    <td id='qty${cartDetail.id}'>${qty.length}</td>
+                                    <td id='total${cartDetail.id}'>${cartDetail.price*qty.length}/-</td>
+                                </tr>`).appendTo("#cartProductDetails");
+                                subTotal=subTotal+cartDetail.price;
+                                $("#subTotal").html(`${subTotal.toFixed(2).bold()}/-`);
+                            }
+                        })
+                    })
+            })
+        }
+
+        $(() => {
+            loadCategory();
+            loadCartProduct();
+            changeCategory();
+            btnAddToCart();
+        })
+    </script>
+</head>
+
+<body class="container-fluid">
+    <header class="bg-dark text-white p-2 mb-2 d-flex justify-content-between">
+        <h2>Shopper...</h2>
+        <div>
+            <div class="bi bi-cart4 fs-4 position-relative pe-4">
+                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#cartModal">
+                    <span class="badge rounded-circle bg-danger position-absolute end-50 fs-6" id="cartCount">0</span>
+                </button>
+            </div>
+            <div class="modal fade" id="cartModal">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="text-black">Your Shopping Cart</h5>
+                            <button type="button" class="btn btn-close" data-bs-dismiss="modal">
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <table class="table table-image">
+                                <thead>
+                                    <tr>
+                                        <th scope="col"></th>
+                                        <th scope="col">Product</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Qty</th>
+                                        <th scope="col">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cartProductDetails">
+
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>SubTotal</th>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td colspan="4" id="subTotal"></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <section class="row" style="width:100%">
+        <nav class="col-2">
+            <select id="lstCategory"></select>
+        </nav>
+        <main class="col-10 d-flex justify-content-around flex-wrap" style="height:575px; overflow:auto;"
+            id="cartContainer">
+        </main>
+    </section>
+</body>
+
+</html>

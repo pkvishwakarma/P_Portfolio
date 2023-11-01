@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>BMI Calculator</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="some Keywords about page">
+    <meta name="description" content="Some Description about page">
+    <!-- <meta http-equiv="refresh" content="4"> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style type="text/css">
+        input[type=text] {
+            box-shadow: 1px 1px 1px green;
+            /* background-image: url("./images/femaleBmiImg.JPG"); */
+        }
+
+        input::placeholder {
+            text-align: right;
+        }
+        #resultGender{
+            text-transform:capitalize;
+        }
+    </style>
+    <script type="text/javascript">
+        var age = parseInt(document.getElementById("txtAge"));
+        var genderMale = document.getElementById("radioMale");
+        var genderFemale = document.getElementById("radioFemale");
+        var height = parseFloat(document.getElementById("txtHeight"));
+        var weight = parseFloat(document.getElementById("txtWeight"));
+        var result=0;
+        
+        function bmiClick() {
+            age = document.getElementById("txtAge");
+            document.getElementById("resultAge").innerHTML=age.value;
+            genderMale=document.getElementById("radioMale");
+            genderFemale=document.getElementById("radioFemale");
+            height = document.getElementById("txtHeight");
+            document.getElementById("resultHeight").innerHTML=height.value;
+            weight = document.getElementById("txtWeight");
+            document.getElementById("resultWeight").innerHTML=weight.value;
+            result=parseFloat((weight.value/(height.value*height.value))*10000);
+            var bmiPara="";
+            if(result<18.5){
+                bmiPara=`(Underweight)`.fontcolor("gray");  
+            }
+            else if(result>=18.5 && result<=25){
+                bmiPara=("(Normal)").fontcolor("green");
+            }
+            else if(result>=25 && result<=30){
+                bmiPara=("(Overweight)").fontcolor("red").fontsize(4);
+            }
+            document.getElementById("resultBMI").innerHTML=(result.toFixed(2)+"Kg/m"+("2").sup()+(bmiPara).italics()).bold();
+            if(genderMale.checked){
+                document.getElementById("resultGender").innerHTML=genderMale.value;
+                document.getElementById("backImg").style.backgroundImage="url('./Img/maleBmiImg.JPG')";
+            }
+            else if(genderFemale.checked){
+                document.getElementById("resultGender").innerHTML=genderFemale.value;
+                document.getElementById("backImg").style.backgroundImage="url('./Img/femaleBmiImg.jpg')";
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <div>
+        <h2 class="border border-success p-3 text-center bg-info fw-bold">BMI Calculator</h2>
+    </div>
+    <div class="w-25 border border-1 border-secondary ms-5 mt-4 bg-secondary">
+        <h4 class="text-center fw-bold pt-2">Metric Units</h4>
+        <div class="pt-2 ps-4 pe-4 pb-4">
+            <form method="get" action="#">
+                <div class="mb-2 row">
+                    <span class="col-3">Age</span><input type="text" name="age" id="txtAge" size="9"
+                        class="border border-success col-4"><span class="col-5">ages: 2 - 120</span>
+                </div>
+                <div class="mb-2 row">
+                    <span class="col-3">Gender</span><input type="radio" name="gender" id="radioMale" value="male" checked
+                        class="col-1"><label for="radioMale" class="col-2">Male</label><input type="radio" name="gender" id="radioFemale"
+                        value="female" class="col-1"><label for="radioFemale" class="col-5">Female</label>
+                </div>
+                <div class="mb-2 row">
+                    <span class="col-3">Height</span><input type="text" name="height" id="txtHeight" placeholder="cm"
+                        class="col-9">
+                </div>
+                <div class="mb-2 row">
+                    <span class="col-3">Weight</span><input type="text" name="weight" id="txtWeight" placeholder="kg"
+                        class="col-9">
+                </div>
+                <div class="text-center mt-3">
+                    <button type="button" onclick="bmiClick()" class="btn btn-success">Calculate<span
+                            class="bi bi-play-circle ms-2"></span></button>
+                    <button type="reset" class="btn btn-warning">Clear</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div>
+        <dl class="row p-2 border border-1 border-black w-25 ms-5 mt-4" id="backImg">
+            <dt class="col-4 mt-2 mb-2">Age</dt>
+            <dd class="col-8 mt-2 mb-2 fw-bold text-primary" id="resultAge"></dd>
+            <dt class="col-4 mt-2 mb-2">Gender</dt>
+            <dd class="col-8 mt-2 mb-2 fw-bold text-primary" id="resultGender"></dd>
+            <dt class="col-4 mt-2 mb-2">Height</dt>
+            <dd class="col-8 mt-2 mb-2 fw-bold text-primary" id="resultHeight"></dd>
+            <dt class="col-4 mt-2 mb-2">Weight</dt>
+            <dd class="col-8 mt-2 mb-2 fw-bold text-primary" id="resultWeight"></dd>
+            <dt class="col-4 mt-2 mb-2">BMI Result</dt>
+            <dd class="col-8 mt-2 mb-2 fw-bold text-primary" id="resultBMI"></dd>
+        </dl>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
