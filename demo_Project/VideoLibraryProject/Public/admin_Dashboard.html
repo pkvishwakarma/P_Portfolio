@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en-in">
+
+<head>
+    <title>Admin Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keyword" content="Basic view of Video Library with Login and Registration Option">
+    <meta name="description"
+        content="Here you will get the option for Login and Registration to watch all kind of entertainment video">
+    <!-- <meta http-equiv="refresh" content="4"> -->
+    <link rel="shortcut icon" href="./images/favicon.png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js" integrity="sha512-+k1pnlgt4F1H8L7t3z95o3/KO+o78INEcXTbnoJQ/F2VqDVhWoaiVml/OEHv9HsVgxUaVW+IbiZPUJQfF/YxZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js" integrity="sha512-aUhL2xOCrpLEuGD5f6tgHbLYEXRpYZ8G5yD+WlFrXrPy2IrWBlu6bih5C9H6qGsgqnU6mgx6KtU8TreHpASprw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="text/javascript">
+        //Post Data to Database throught Javascript ajax...
+        // function addVideo(){
+        //     var videoid=document.getElementById("video_Id").value;
+        //     var videotitle=document.getElementById("video_Title").value;
+        //     var videourl=document.getElementById("video_Url").value;
+        //     var vidoelikes=document.getElementById("video_Likes").value;
+        //     var videodislikes=document.getElementById("video_Dislikes").value;
+        //     var videocomments=document.getElementById("video_Comments").value;
+        //     var videocategory=document.getElementById("video_Category").value;
+        //     console.log(videocategory);
+        //     var videoDetail = JSON.stringify({
+        //             video_Id: parseInt(videoid),
+        //             video_Title: videotitle,
+        //             video_Url: videourl,
+        //             video_Category:videocategory,
+        //             video_Likes: parseInt(vidoelikes),
+        //             video_Dislikes: parseInt(videodislikes),
+        //             video_Comments:videocomments
+        //         })
+        //         console.log(videoDetail);
+
+        //         var xhr = new XMLHttpRequest();
+        //         xhr.open("post", "http://127.0.0.1:7700/addvideo");
+        //         xhr.setRequestHeader('Content-type', 'application/json');
+        //         xhr.onreadystatechange = function () {
+        //             if (xhr.readyState == 4) {
+        //                 alert("new video Added Successfully");
+        //             }
+        //         }
+        //         xhr.send(videoDetail);
+        // }
+
+        // window.onload=function(){
+        //     document.getElementById("addVideoForm").addEventListener("submit",(e)=>{
+        //         e.preventDefault();
+        //         addVideo();
+        //     })
+        // }
+
+        $(function () {
+            $("#adminContainer").html("Welcome to Admin Dashboard " + $.cookie("adminCookie"));
+            $("#btnSignout").click(() => {
+                $.removeCookie("adminCookie");
+                location.href = ("./admin_Login.html");
+            })
+            if ($.cookie("adminCookie") == undefined) {
+                location.href = ("./admin_Login.html");
+            }
+
+            $("#addVideoForm").submit((e) => {
+                e.preventDefault();
+                var videoDetail = {
+                    video_Id: parseInt($("#video_Id").val()),
+                    video_Title: $("#video_Title").val(),
+                    video_Url: $("#video_Url").val(),
+                    video_Category:$("#video_Category").val(),
+                    video_Likes: parseInt($("#video_Likes").val()),
+                    video_Dislikes: parseInt($("#video_Dislikes").val()),
+                    video_Comments: $("#video_Comments").val()
+                }
+                $.ajax({
+                    method: "post",
+                    url: "http://127.0.0.1:7700/addvideo",
+                    data: videoDetail
+                })
+                alert("new video Added Successfully");
+                var resetform = $(".resetForm");
+                for (var i = 0; i < resetform.length; i++) {
+                    $(resetform[i]).val("");
+                }
+                location.reload();
+            })
+
+            var count=1;
+            $.ajax({
+                method:"get",
+                url:"http://127.0.0.1:7700/videos",
+                success:((videos)=>{
+                    // console.log(videos.length);
+                    videos.map((video)=>{
+                        $(`<tr>
+                            <td>${count}</td>
+                            <td>${video.video_Title}</td>
+                            <td><iframe src='${video.video_Url}' width='300' height='200'></iframe></td>
+                            <td>
+                                <button id='videoEdit' value='${video.video_Id}' class='btn btn-info bi bi-pen-fill'></button>
+                                <button id='videoDelete' value='${video.video_Id}' class='btn btn-warning bi bi-trash-fill'></button>
+                            </td>
+                        </tr>`).appendTo("#videoTbody")
+                        count++;
+                    })
+                })
+            })
+            //Modify Function in video Dashboard...
+            $(document).on("click","#videoEdit",(e)=>{
+            sessionStorage.setItem("videoid",e.target.value);
+            location.href=("./admin_Edit_Video.html");
+            })
+
+            //Delete Function in video Dashboard...
+            $(document).on("click","#videoDelete",(e)=>{
+                $.ajax({
+                    method:"delete",
+                    url:`http://127.0.0.1:7700/deletevideo/${e.target.value}`,
+                })
+                alert("Video Deleted Successfully");
+                location.reload();
+            })
+        })
+    </script>
+</head>
+
+<body class="container-fluid" style="background-color:whitesmoke;">
+    <div style="display: flex; align-items:center;">
+        <header class="mt-2"><img src="./images/videoLibrarLogo.png" alt="Logo" width="40%"></header>
+        <span id="adminContainer"
+            style="margin:auto; margin-left:-0.6em; font-size:2em; font-weight: bold; color:rgb(209, 91, 48);"></span>
+        <button class="btn btn-link" id="btnSignout" style="text-decoration:none;">SignOut</button>
+    </div>
+    <div class="row m-2">
+        <div class="col-3">
+            <fieldset
+                style="border:1px solid gray; width:100%; padding:0.6em; border-radius:3px; background-color: rgba(145, 122, 122, 0.7);">
+                <legend
+                    style="float:none; width:auto; border:1px solid gray; margin:auto; font-weight:bold; border-radius:5px; padding:0.1em; color:rgb(209, 91, 48); background-color: rgba(145, 122, 122, 0.2);">
+                    <span class="bi bi-"></span>Upload Video Details
+                </legend>
+                <form id="addVideoForm">
+                    <label for="videoId" class="form-label">Video ID</label>
+                    <input type="text" name="videoId" id="video_Id" placeholder="VideoId"
+                        class="form-control resetForm">
+                    <label for="videoTitle" class="form-label">Video Title</label>
+                    <input type="text" name="videoTitle" id="video_Title" placeholder="Video Title"
+                        class="form-control resetForm">
+                    <label for="videoUrl" class="form-label">Video URL</label>
+                    <input type="text" name="videoUrl" id="video_Url" placeholder="Video URL"
+                        class="form-control resetForm">
+                    <label for="videoCategory" class="form-label">Video Category</label>
+                    <div>
+                        <select name="videoCategory" id="video_Category" class="form-control">
+                            <option selected>Select Video Category</option>
+                            <option>Music</option>
+                            <option>Entertainment</option>
+                            <option>Drama</option>
+                            <option>Comedy</option>
+                        </select>
+                    </div>
+                    <label for="videoLikes" class="form-label">Likes</label>
+                    <input type="text" name="videoLikes" id="video_Likes" placeholder="Video Likes"
+                        class="form-control resetForm">
+                    <label for="videoDislikes" class="form-label">Dislikes</label>
+                    <input type="text" name="videoDislikes" id="video_Dislikes" placeholder="Video Dislikes"
+                        class="form-control resetForm">
+                    <label for="videoComments" class="form-label">Comments</label>
+                    <input type="text" name="videoComments" id="video_Comments" placeholder="Video Comments"
+                        class="form-control resetForm">
+                    <button class="btn btn-info form-control mt-3 ">Add Video</button>
+                </form>
+            </fieldset>
+        </div>
+        <div class="col">
+            <table width="95%" style="text-align: center;">
+                <thead>
+                    <tr>
+                        <th>S/N</th>
+                        <th>Title</th>
+                        <th>Preview</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="videoTbody"></tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>
