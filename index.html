@@ -12,6 +12,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./index.css">
+    <script src="https://smtpjs.com/v3/smtp.js"></script>
     <script type="text/javascript">
         var effect;
         function scrollMain() {
@@ -26,6 +27,50 @@
                 scrollMain();
             });
         }
+
+        function HandleMenuClick() {
+            var menuStyle = document.querySelector("#navMenu").style;
+            menuStyle.display == 'none' ? menuStyle.display = 'block' : menuStyle.display = 'none';
+        }
+
+        function sendMail() {
+            const form = document.querySelector('#contactform');
+            const formName = document.querySelector('#formNameInput');
+            const formEmail = document.querySelector('#formEmailInput');
+            const formMsg = document.querySelector('#formMsgInput');
+            const formSendMsg = document.querySelector('#formSendMsg');
+            Email.send({
+                Host: "smtp.elasticemail.com",
+                Username:"pkdummyemailadd@gmail.com",
+                Password:"AE5B0E80202D7418269D7CDD17960D3C698C",
+                To: 'pkdummyemailadd@gmail.com',
+                From:'pkdummyemailadd@gmail.com',
+                Subject: "Message From "+formName.value+' and Email Id Is '+formEmail.value,
+                Body: formMsg.value,
+            }).then(
+                message => {
+                if (message == "OK") {
+                    formSendMsg.innerHTML = 'Message Sent Successfully';
+                }
+                else{
+                    formEmail.innerHTML='Invalid Credential';
+                }
+                }
+            );
+        }
+
+        function clearInput(){
+            var fields=document.querySelectorAll(".formStyle");
+            Array.from(fields).forEach((e)=>{
+                e.value='';
+            })
+        }
+        function HandleFormSubmit(e) {
+            e.preventDefault();
+            sendMail();
+            clearInput();
+        }
+
     </script>
 </head>
 
@@ -34,12 +79,15 @@
         <nav>
             <div class="left"><span style="color:rgb(170, 107, 228);">Pv's</span> Portfolio</div>
             <div class="right">
-                <ul>
-                    <li><a href="#home">Home</a></li>
-                    <li><a href="#about">About Me</a></li>
-                    <li><a href="#demoProject">Demo Project</a></li>
-                    <li><a href="#contact">Contact Me</a></li>
-                </ul>
+                <div id="navMenuContainer">
+                    <ul id="navMenu">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#about">About Me</a></li>
+                        <li><a href="#demoProject">Demo Project</a></li>
+                        <li><a href="#contact">Contact Me</a></li>
+                    </ul>
+                </div>
+                <div onclick="HandleMenuClick()" id="navMenuList"><span class="bi bi-list"></span></div>
             </div>
         </nav>
     </header>
@@ -51,7 +99,10 @@
                     <div>and i am a passionate</div>
                     <div><span id="element" style="color:rgb(170, 107, 228);"></span></div>
                     <div>
-                        <button style="width:14vw;height:8vh;background-color:rgb(170, 107, 228);border-radius:7px;margin-top:1rem;"><a href="./Image/P_Vishwakarma_Resume.pdf" download="Pankaj_Vishwakarma_Resume" style="font-size:1.1rem;text-decoration:none;color:white;">Download Resume</a></button>
+                        <button
+                            style="width:max-content;height:max-content;padding:1em;background-color:rgb(170, 107, 228);border-radius:7px;margin-top:1rem;"><a
+                                href="./Image/Pankaj_CV.pdf" download="Pankaj_Vishwakarma_Resume"
+                                style="font-size:1.1rem;text-decoration:none;color:white;">Download Resume</a></button>
                     </div>
                 </div>
                 <div class="rightSection"><img src="./Image/portfolioImg.png" alt="Img" width="500"></div>
@@ -59,20 +110,22 @@
         </section>
         <section class="secondSection" id="about">
             <h1>About Me</h1>
-            <blockquote>I am a dedicated <span style="color:#9c97f1;">web developer</span> with knowledge to develop
+            <blockquote>I am a dedicated <span style="color:#9c97f1;">[MERN Stack] web developer</span> with knowledge
+                to develop
                 websites that are both good design and functional. I have understanding of web standards, and I am
                 passionate about creating websites that users will find easy to use. I have knowledge <span
-                    style="color:rgb(170, 107, 228);">(HTML,CSS,Bootstrap,JavaScript,jQuery,Ajax,Sass)</span> in <span
-                    style="color:#9c97f1;">Front End Technology</span> and in <span style="color:#9c97f1;">Back End
+                    style="color:rgb(170, 107, 228);">(HTML, CSS, JavaScript ReactJS Library, Bootstrap, jQuery, Ajax,
+                    Sass, JSON, TailwindCSS)</span> in <span style="color:#9c97f1;">Front End Technology</span> and in
+                <span style="color:#9c97f1;">Back End
                     Technology</span> <span style="color:rgb(170, 107, 228);">(Express Js,Node Js, in Server Side and
                     MongoDB in Database)</span>. I am confident about my knowledge to contribute to any project. I am
                 looking for an opportunity to use my skills and knowledge to make a positive impact on the web.
             </blockquote>
-            <div style="display:flex; justify-content: space-between;">
+            <div class="educationTitleContainer">
                 <h2>Education</h2>
-                <h2>Certification</h2>
+                <h2 class="certificateTitleContainer">Certification</h2>
             </div>
-            <div style="display:flex; justify-content: space-around;">
+            <div class="educationStyleContainer">
                 <div class="educationContainer">
                     <p>
                     <h3>MASTER OF BUSINESS ADMINISTRATION(MBA with IT Specialization)</h3>
@@ -82,7 +135,7 @@
                     <span style="font-weight: bold;">Marks obtained: 67.2%</span><br>
                     Passing Year: 2021
                     </p>
-                    <div>******************************************************</div>
+                    <div class="eduChildStyleContainer"></div>
                     <p>
                     <h3>BACHELORS OF COMMERCE(Bcom)</h3>
                     <span style="font-weight: bold;">Shri Rama Krishna College Satna (MP)</span><br>
@@ -90,7 +143,7 @@
                     <span style="font-weight: bold;">Marks obtained: 43.4%</span><br>
                     Passing Year: 2016
                     </p>
-                    <div>******************************************************</div>
+                    <div class="eduChildStyleContainer"></div>
                     <p>
                     <h3>HIGHER SECONDARY (12<sup>th</sup>)</h3>
                     <span style="font-weight: bold;">Govt. Venkat No-2 Hr. Sec. School Satna (MP)</span><br>
@@ -99,14 +152,22 @@
                     Passing Year: 2012
                     </p>
                 </div>
+                <h2 class="certificateTitleResponsiveContainer">Certification</h2>
                 <div class="certificationContainer">
+                    <p>
+                    <h3>ReactJS Library</h3>
+                    <span style="font-weight: bold;">Naresh I Technologies, Hyderabad</span><br>
+                    City: Ameerpet Hyderabad, Dist: Hyderabad,<br> State: Telangana.<br>
+                    Passing Year: Oct-Jan 2024
+                    </p>
+                    <div class="eduChildStyleContainer"></div>
                     <p>
                     <h3>UI Full Stack(Web Developer)</h3>
                     <span style="font-weight: bold;">Naresh I Technologies, Hyderabad</span><br>
                     City: Ameerpet Hyderabad, Dist: Hyderabad,<br> State: Telangana.<br>
                     Passing Year: Jun-Sep 2023
                     </p>
-                    <div>******************************************************</div>
+                    <div class="eduChildStyleContainer"></div>
                     <p>
                     <h3>Computer Hardware & Networking</h3>
                     <span style="font-weight: bold;">TNS Institute of Information Technologies, Jabalpur (MP)</span><br>
@@ -117,159 +178,200 @@
             </div>
         </section>
         <section class="thirdSection" id="demoProject">
-            <h1>Demo Project</h1>
+            <h1>Demo Project[ReactJS Based]</h1>
             <div class="project">
-                <div style="box-shadow: 0px 0px 20px 6px mediumpurple;border-radius:8px;">
-                    <a href="./demo_Project/youtubeStatic&Responsive/youtubeStatic.html" target="_blank"><img
-                            style="border-radius:8px;" src="./Image/youtubeimg.JPG" alt="youtbImg" width="400"></a>
+                <div class="tenthDescription">
+                    <p>This is Simple CRUD Operation Task which is Created Using MERN Stack, Here I used Register and
+                        Login Form where user can login and then he can Create CRUD Task(Sample UserId: simon_log
+                        Password: Simon@123)</p>
+                    <p>This page is design using Frontend and Backend using MongoDB Database</p>
+                    <p>(HTML,CSS,Bootstrap,JavaScript,ReactJS Library,ExpressJS,NodeJs,MongoDB)</p>
                 </div>
-                <div
-                    style="text-align:center; width:350px;padding:1.5em;box-shadow: 0px 0px 20px 6px mediumpurple; border-radius:8px;font-size:1.1em;">
+                <div class="tenthProject">
+                    <a href="https://claimzippyassignment.netlify.app/" target="_blank"><img
+                            src="./Image/ClaimZippyAssignment.JPG" alt="shopperImg" height="250"></a>
+
+                </div>
+            </div>
+            <div class="project">
+                <div class="eleventhDescription">
+                    <p>This is Simple Ecommerce Site with Limited Options where user can find login Id/Pass with
+                        https://dummyjson.com/users/ site after login Successfullly user will navigate to Product Page
+                        where user can find multiple products with multiple filter options user can simply filter items
+                        add that product into cart(Sample UserId: kminchelle Password: 0lelplR)</p>
+                    <p>This page is design using</p>
+                    <p>(HTML,CSS,Bootstrap,JavaScript,ReactJS Library)</p>
+                </div>
+                <div class="eleventhProject">
+                    <a href="https://ecommercedemoproject-g0wnpkcma-pankaj-vishwakarmas-projects.vercel.app/"
+                        target="_blank"><img src="./Image/EcommerceAssignmentProject.JPG" alt="shopperImg"
+                            height="250"></a>
+
+                </div>
+            </div>
+            <h1>Demo Project[JS Based]</h1>
+            <div class="project">
+                <div class="firstProject">
+                    <a href="./demo_Project/youtubeStatic&Responsive/youtubeStatic.html" target="_blank"><img
+                            src="./Image/youtubeimg.JPG" alt="youtbImg"></a>
+                </div>
+                <div class="firstDescription">
                     <p>This is Simple youtube Static page with orientation responsive where user can watch youtube embed
                         video,</p>
-                    <p style="color:#9c97f1;">This page is design using</p>
-                    <p style="color:rgb(170, 107, 228); font-weight:bold;">(HTML,CSS,Media Query,Bootstrap-icon)</p>
+                    <p>This page is design using</p>
+                    <p>(HTML,CSS,Media Query,Bootstrap-icon)</p>
                 </div>
             </div>
             <div class="project">
-                <div
-                    style="text-align:center; width:350px;padding:1.5em;box-shadow: 0px 0px 20px 6px mediumpurple; border-radius:8px;font-size:1.2em;">
+                <div class="secondDescription">
                     <p>This is Simple shopping static website with orientation responsive and some css effects,</p>
-                    <p style="color:#9c97f1;">This page is design using</p>
-                    <p style="color:rgb(170, 107, 228); font-weight:bold;">(HTML,CSS,Media Query,Bootstrap)</p>
+                    <p>This page is design using</p>
+                    <p>(HTML,CSS,Media Query,Bootstrap)</p>
                 </div>
-                <div style="box-shadow: 0px 0px 20px 6px mediumpurple;border-radius:8px;">
+                <div class="secondProject">
                     <a href="./demo_Project/onlineShopperStaticPage/ShoppersOnline.html" target="_blank"><img
-                            style="border-radius:8px;" src="./Image/shopperimg.JPG" alt="shopperImg" width="400"></a>
+                            src="./Image/shopperimg.JPG" alt="shopperImg"></a>
                 </div>
             </div>
             <div class="project">
-                <div style="box-shadow: 0px 0px 20px 6px mediumpurple;border-radius:8px;">
+                <div class="thirdProject">
                     <a href="./demo_Project/KFCSampleOrder/JSKfcPracticeTask.html" target="_blank"><img
-                            style="border-radius:8px;" src="./Image/kfcimg.JPG" alt="youtbImg" width="400"></a>
+                            src="./Image/kfcimg.JPG" alt="youtbImg"></a>
                 </div>
-                <div
-                    style="text-align:center; width:350px;padding:1.5em;box-shadow: 0px 0px 20px 6px mediumpurple; border-radius:8px;font-size:1.1em;">
+                <div class="thirdDescription">
                     <p>This is Simple and responsive KFC food order page with slight user interaction features like user
                         can place food order with slight process and get the food order summary with final payment,</p>
-                    <p style="color:#9c97f1;">This page is design using</p>
-                    <p style="color:rgb(170, 107, 228); font-weight:bold;">(HTML,CSS,Bootstrap,JavaScript,jquery)</p>
+                    <p>This page is design using</p>
+                    <p>(HTML,CSS,Bootstrap,JavaScript,jquery)</p>
                 </div>
             </div>
             <div class="project">
-                <div
-                    style="text-align:center;width:350px;padding:1.5em;box-shadow: 0px 0px 20px 6px mediumpurple; border-radius:8px;font-size:1.2em;">
+                <div class="fourthDescription">
                     <p>This is Simple BMI Calculator and Loan Interest Calculator with basic layout,</p>
-                    <p style="color:#9c97f1;">This page is design using</p>
-                    <p style="color:rgb(170, 107, 228);font-weight:bold;word-wrap:break-word;">
-                        (HTML,CSS,Bootstrap,JavaScript,jquery)</p>
+                    <p>This page is design using</p>
+                    <p>(HTML,CSS,Bootstrap,JavaScript,jquery)</p>
                 </div>
-                <div style="box-shadow: 0px 0px 20px 6px mediumpurple;border-radius:8px;">
+                <div class="fourthProject">
                     <a href="./demo_Project/Calculator/bmiCalculator.html" target="_blank"><img
-                            style="border-radius:8px;" src="./Image/bmicalcimg.JPG" alt="shopperImg" width="190"
-                            height="250"></a>
+                            src="./Image/bmicalcimg.JPG" alt="shopperImg"></a>
                     <a href="./demo_Project/Calculator/InterestCalc.html" target="_blank"><img
-                            style="border-radius:8px;" src="./Image/intcalcimg.JPG" alt="shopperImg" width="210"
-                            height="250"></a>
+                            src="./Image/intcalcimg.JPG" alt="shopperImg"></a>
                 </div>
             </div>
             <div class="project">
-                <div style="box-shadow: 0px 0px 20px 6px mediumpurple;border-radius:8px;">
-                    <a href="./demo_Project/StaticAnalogClock.html" target="_blank"><img style="border-radius:8px;"
+                <div class="fifthProject" style="box-shadow: 0px 0px 20px 6px mediumpurple;border-radius:8px;">
+                    <a href="./demo_Project/StaticAnalogClock.html" target="_blank"><img
                             src="./Image/analogclockimg.JPG" alt="youtbImg" width="400" height="250"></a>
                 </div>
-                <div
-                    style="text-align:center; width:350px;padding:1.5em;box-shadow: 0px 0px 20px 6px mediumpurple; border-radius:8px;font-size:1.1em;">
+                <div class="fifthDescription">
                     <p>This is Simple analog clock with basic layout design where user can check GMT Time,</p>
-                    <p style="color:#9c97f1;">This page is design using</p>
-                    <p style="color:rgb(170, 107, 228); font-weight:bold;">(HTML,CSS,JavaScript)</p>
+                    <p>This page is design using</p>
+                    <p>(HTML,CSS,JavaScript)</p>
                 </div>
             </div>
             <div class="project">
-                <div
-                    style="text-align:center;width:350px;padding:1.5em;box-shadow: 0px 0px 20px 6px mediumpurple; border-radius:8px;font-size:1.2em;">
+                <div class="sixthDescription">
                     <p>This is Simple No to Word Convertor page with basic layout design, where user can type some
                         amount and get the amount value in word,</p>
-                    <p style="color:#9c97f1;">This page is design using</p>
-                    <p style="color:rgb(170, 107, 228);font-weight:bold;">(HTML,CSS,Bootstrap,JavaScript)</p>
+                    <p>This page is design using</p>
+                    <p>(HTML,CSS,Bootstrap,JavaScript)</p>
                 </div>
-                <div style="box-shadow: 0px 0px 20px 6px mediumpurple;border-radius:8px;">
-                    <a href="./demo_Project/JSNoToWordTask.html" target="_blank"><img style="border-radius:8px;"
-                            src="./Image/nowordimg.JPG" alt="shopperImg" width="400" height="250"></a>
+                <div class="sixthProject">
+                    <a href="./demo_Project/JSNoToWordTask.html" target="_blank"><img src="./Image/nowordimg.JPG"
+                            alt="shopperImg" height="250"></a>
 
                 </div>
             </div>
             <div class="project">
-                <div style="box-shadow: 0px 0px 20px 6px mediumpurple;border-radius:8px;">
-                    <a href="./demo_Project/Text_to_Speech.html" target="_blank"><img style="border-radius:8px;"
-                            src="./Image/txtspeechimg.JPG" alt="shopperImg" width="400"></a>
+                <div class="seventhProject">
+                    <a href="./demo_Project/Text_to_Speech.html" target="_blank"><img src="./Image/txtspeechimg.JPG"
+                            alt="shopperImg"></a>
                 </div>
-                <div
-                    style="text-align:center; width:350px;padding:1.5em;box-shadow: 0px 0px 20px 6px mediumpurple; border-radius:8px;font-size:1.2em;">
+                <div class="seventhDescription">
                     <p>This is Simple Text to Speech converter with basic layout design, where user can type some text
                         in textarea and its convert into voice,</p>
-                    <p style="color:#9c97f1;">This page is design using</p>
-                    <p style="color:rgb(170, 107, 228); font-weight:bold;">(HTML,CSS,Bootstrap,JavaScript)</p>
+                    <p>This page is design using</p>
+                    <p>(HTML,CSS,Bootstrap,JavaScript)</p>
                 </div>
             </div>
             <div class="project">
-                <div
-                    style="text-align:center;width:350px;padding:1.5em;box-shadow: 0px 0px 20px 6px mediumpurple; border-radius:8px;font-size:1.2em;">
+                <div class="eightDescription">
                     <p>This is Simple shopping cart website page with basic layout design, where user can search
                         category-wise product and add it to in cart and check selected product in cart option,</p>
-                    <p style="color:#9c97f1;">This page is design using</p>
-                    <p style="color:rgb(170, 107, 228);font-weight:bold;word-wrap:break-word;">
-                        (HTML,CSS,Bootstrap,JavaScript.jquery,Ajax)</p>
+                    <p>This page is design using</p>
+                    <p>(HTML,CSS,Bootstrap,JavaScript.jquery,Ajax)</p>
                 </div>
-                <div style="box-shadow: 0px 0px 20px 6px mediumpurple;border-radius:8px;">
-                    <a href="./demo_Project/JS_jQuery_Ajax_Shopper.html" target="_blank"><img style="border-radius:8px;"
-                            src="./Image/shopcartimg.JPG" alt="shopperImg" width="400" height="250"></a>
+                <div class="eightProject">
+                    <a href="./demo_Project/JS_jQuery_Ajax_Shopper.html" target="_blank"><img
+                            src="./Image/shopcartimg.JPG" alt="shopperImg" height="250"></a>
 
                 </div>
             </div>
             <div class="project">
-                <div style="box-shadow: 0px 0px 20px 6px mediumpurple;border-radius:8px;">
+                <div class="ninthProject">
                     <a href="./demo_Project/VideoLibraryProject/Public/index.html" target="_blank"><img
-                            style="border-radius:8px;" src="./Image/videogalleryimg.JPG" alt="shopperImg"
-                            width="400"></a>
+                            src="./Image/videogalleryimg.JPG" alt="shopperImg"></a>
                 </div>
-                <div
-                    style="text-align:center; width:350px;padding:1.5em;box-shadow: 0px 0px 20px 6px mediumpurple; border-radius:8px;font-size:1.2em;">
+                <div class="ninthDescription">
                     <p>This is Simple video gallery website with basic layout design where admin have option to upload
                         new video modify video and delete video and user can watch video like and dislike video and many
                         option like registratio login and forgot password option with validation,</p>
-                    <p style="color:#9c97f1;">This page is design using both Technologies Front End and Back End</p>
-                    <p style="color:rgb(170, 107, 228); font-weight:bold;word-wrap:break-word;">
-                        (HTML,CSS,Bootstrap,JavaScript,jquery,Ajax,NodeJs,ExpressJS,MongoDB)</p>
+                    <p>This page is design using both Technologies Front End and Back End</p>
+                    <p>(HTML,CSS,Bootstrap,JavaScript,jquery,Ajax,NodeJs,ExpressJS,MongoDB)</p>
                 </div>
             </div>
         </section>
         <section class="fourthSection" id="contact">
             <h1>Contact Me</h1>
-            <div style="display:flex;justify-content:space-evenly;">
+            <div class="footerContactContainer">
                 <div>
-                    <h3>Email ID</h3>
-                    <a href="mailto:pkvishwakarma38@gmail.com">pkvishwakarma38@gmail.com</a>
+                    <div>
+                        <h3>Email ID</h3>
+                        <a href="mailto:pkvishwakarma38@gmail.com">pkvishwakarma38@gmail.com</a>
+                    </div>
+                    <div>
+                        <h3>Contact No</h3>
+                        <a href="Tel:8770119253">8770119253</a><br>
+                        <a href="Tel:8085808801">8085808801</a>
+                    </div>
+                    <div>
+                        <button
+                            style="width:max-content;height:max-content;padding:1em;background-color:rgb(170, 107, 228);border-radius:7px;margin-top:3rem;"><a
+                                href="./Image/Pankaj_CV.pdf" download="Pankaj_Vishwakarma_Resume"
+                                style="font-size:1rem;padding:0;">Download Resume</a></button>
+                    </div>
                 </div>
                 <div>
-                    <h3>Contact No</h3>
-                    <a href="Tel:8770119253">8770119253</a><br>
-                    <a href="Tel:8085808801">8085808801</a>
-                </div>
-                <div>
-                    <button style="width:14vw;height:8vh;background-color:rgb(170, 107, 228);border-radius:7px;margin-top:3rem;"><a href="./Image/P_Vishwakarma_Resume.pdf" download="Pankaj_Vishwakarma_Resume" style="font-size:1rem;padding:0;">Download Resume</a></button>
+                    <div class="formStyleContainer">
+                        <p style="color:darkgreen;font-weight:550;" id="formSendMsg"></p>
+                        <div style="text-align: center;color:#9c97f1;font-size:1.8em;font-weight:550;">Get In Touch
+                        </div>
+                        <form id="contactform" onsubmit="HandleFormSubmit(event)">
+                            <label for="name">Name</label>
+                            <input type="text" name="name" placeholder="Your Name" required class="formStyle"
+                                id="formNameInput">
+                            <label for="email">Email</label>
+                            <input type="email" name="email" placeholder="Your Email Address" required class="formStyle"
+                                id="formEmailInput">
+                            <label for="message">Message</label>
+                            <textarea name="message" class="formStyle" maxlength="1000"
+                                placeholder="Type Your Message here.." id="formMsgInput"></textarea>
+                            <button type="submit" class="btnStyle">Send Message</button>
+                        </form>
+                    </div>
                 </div>
             </div>
+            <div class="backToHomePageContainer"><a href="#home">Back To Home</a></div>
         </section>
     </main>
     <script src="https://unpkg.com/typed.js@2.0.16/dist/typed.umd.js"></script>
     <script>
         var typed = new Typed('#element', {
-            strings: ['Web Devloper', 'Website Designer'],
+            strings: ['MERN Stack Devloper', 'Web Devloper', 'Website Designer'],
             typeSpeed: 50,
+            loop: true,
         });
     </script>
-
 </body>
 
 </html>

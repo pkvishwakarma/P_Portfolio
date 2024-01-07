@@ -105,6 +105,7 @@
                 qty = cartCount.filter((val) => {
                     return val == e.target.value;
                 });
+                console.log(cartCount);
                 console.log(qty);
                     $.ajax({
                         method: "get",
@@ -133,7 +134,6 @@
                     })
             })
         }
-
         $(() => {
             loadCategory();
             loadCartProduct();
